@@ -1,71 +1,233 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Profile</title>
+    <style>
+        @media (max-width: 576px) {
+            .container-c {
+				 flex-direction: column;
+				 padding: 10px; height: auto; 
+			}
+            .sidebar {
+				 width: 100%; 
+				 height: auto; 
+				 padding: 15px; 
+				 text-align: center; 
+				}
+            .side-logo img { 
+				width: 100px; 
+				height: auto; 
+				margin-bottom: 10px; 
+			}
+            .side-nav a { 
+				font-size: 24px; 
+				padding: 10px 0; 
+				display: block; 
+				width: 100%; 
+			}
+            .calculator { 
+				width: 100%; 
+				padding: 10px; 
+				text-align: center; 
+			}
+            .title h1 { 
+				font-size: 26px; 
+				line-height: 32px; 
+			}
+            .title h2 { 
+				font-size: 20px; 
+			}
+            .table { 
+				width: 100%; 
+				overflow-x: auto; 
+				padding: 10px 0; 
+			}
+            table { 
+				width: 100% !important; 
+				font-size: 14px; 
+				border-radius: 20px !important; 
+			}
+            table th, table td { 
+				padding: 8px; 
+				text-align: center; 
+				font-size: 14px; 
+			}
+            .button { 
+				margin-top: 20px; 
+				display: flex; 
+				flex-direction: column; 
+				gap: 10px; 
+				align-items: center; 
+			}
+            .button button,a:links { 
+				width: 90%; 
+				max-width: 250px; 
+				height: 35px; 
+				font-size: 16px; 
+				border-radius: 50px; 
+			}
+            input.profile-input { 
+				width: 90%; 
+				max-width: 200px; 
+				height: 30px; 
+				border-radius: 5px; 
+				padding: 3px; }
+        }
+    </style>
 </head>
 <body style="background-color: #C8EDE6;">
-	<div class="container-c">
-		<div class="sidebar">
-			<div class="side-logo">
-				<img src="images/logo.png">
-			</div>
-			<div class="side-nav">
-				<a href="dashboard.html">DASHBOARD</a>
-				<a style="background-color: #C8EDE6;"href="">PROFILE</a>
-				<a href="calculator.html">CALCULATOR</a>
-				<a href="history.html">HISTORY</a>
-			</div>
-		</div>
-		<div class="calculator">
-			<div class="title">
-				<h1>ELECTRIC BILL <br>CALCULATOR</h1>
-				<br>
-				<br>
-				<h2>PROFILE</h2>
-				<br>
-			</div>
-			<div class="table">
-				<table style="opacity: 0.5; border-radius: 30px;width: 100%; background-color: #C8E3ED; border: none; border-collapse: collapse;">
-					<tr>
-						<th style="border-left: none; border-right: none;border-top: none;"></th>
-						<th style="border-left: none; border-right: none;border-top: none;">Account Information</th>
-						<th style="border-left: none; border-right: none;border-top: none;"></th>
-					</tr>
-					<tr>
-						<td style="border-left: none; border-right: none;">First Name</td>
-						<td style="border-left: none; border-right: none;"></td>
-						<td style="border-left: none; border-right: none;">Sample</td>
-					</tr>
-					<tr>
-						<td style="border-left: none; border-right: none;">Last Name</td>
-						<td style="border-left: none; border-right: none;"></td>
-						<td style="border-left: none; border-right: none;">Sample</td>
-					</tr>
-					<tr>
-						<td style="border-left: none; border-right: none;">Account Email</td>
-						<td style="border-left: none; border-right: none;"></td>
-						<td style="border-left: none; border-right: none;">Sample</td>
-					</tr>
-					<tr>
-						<td style="border-left: none; border-right: none;">Address</td>
-						<td style="border-left: none; border-right: none;"></td>
-						<td style="border-left: none; border-right: none;">Sample</td>
-					</tr>
-					<tr>
-						<td style="border-left: none; border-right: none;border-bottom: none;">Contact</td>
-						<td style="border-left: none; border-right: none;border-bottom: none;"></td>
-						<td style="border-left: none; border-right: none;border-bottom: none;">Sample</td>
-					</tr>
-				</table>
-			</div>
-			<div class="button">
-				<a href="index.html">
-				<button>Logout</button>
-				</a>
-				<button>Edit</button>
-			</div>
-		</div>
-	</div>
+    <div class="container-c">
+        <div class="sidebar">
+            <div class="side-logo">
+                <img src="images/logo.png">
+            </div>
+            <div class="side-nav">
+                <a href="dashboard.html">DASHBOARD</a>
+                <a style="background-color: #C8EDE6;" href="">PROFILE</a>
+                <a href="calculator.html">CALCULATOR</a>
+                <a href="history.html">HISTORY</a>
+            </div>
+        </div>
 
+        <div class="calculator">
+            <div class="title">
+                <h1>ELECTRIC BILL <br>CALCULATOR</h1>
+                <br><br>
+                <h2>PROFILE</h2>
+                <br>
+            </div>
+
+            <div class="table">
+                <table style="opacity: 0.8; border-radius: 30px;width: 100%; background-color: #C8E3ED; border: none; border-collapse: collapse;">
+                    <tr>
+                        <th style="border-top: none;border-left: none; border-right: none;"></th>
+                        <th style="border-top: none;border-left: none; border-right: none;">Account Information</th>
+                    </tr>
+                    <tr>
+                        <th style="border-top: none;border-left: none; border-right: none;">First Name</td>
+                        <td style="border-left: none;border-right: none;" id="first_name"></td>
+                    </tr>
+                    <tr>
+                        <th style="border-top: none;border-left: none; border-right: none;">Last Name</td>
+                        <td style="border-left: none;border-right: none;" id="last_name"></td>
+                    </tr>
+                    <tr>
+                        <th style="border-top: none;border-left: none; border-right: none;">Account Email</td>
+                        <td style="border-left: none;border-right: none;"s id="email"></td>
+                    </tr>
+                    <tr>
+                        <th style="border-top: none;border-left: none; border-right: none;">Address</td>
+                        <td style="border-left: none;border-right: none;" id="address"></td>
+                    </tr>
+                    <tr>
+                        <th style="border-bottom: none;border-left: none; border-right: none;">Contact</td>
+                        <td style="border-bottom: none; border-left: none;border-right: none;" id="contact"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="button">
+                <button id="logoutBtn">Logout</button>
+                <button id="editBtn">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        let editing = false;
+
+        async function checkAuth() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            return session;
+        }
+
+        async function getCurrentUser() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            return session?.user;
+        }
+
+        async function signOut() {
+            await supabaseClient.auth.signOut();
+        }
+
+        async function loadProfile() {
+            const user = await getCurrentUser();
+
+            document.getElementById("first_name").innerText = user?.user_metadata?.full_name?.split(" ")[0] || "";
+            document.getElementById("last_name").innerText = user?.user_metadata?.full_name?.split(" ")[1] || "";
+            document.getElementById("email").innerText = user?.email || "";
+            document.getElementById("address").innerText = user?.user_metadata?.address || "N/A";
+            document.getElementById("contact").innerText = user?.user_metadata?.contact || "N/A";
+        }
+
+        function toggleEdit() {
+            const firstName = document.getElementById("first_name");
+            const lastName = document.getElementById("last_name");
+            const address = document.getElementById("address");
+            const contact = document.getElementById("contact");
+
+            if (!editing) {
+                // Switch to input fields
+                firstName.innerHTML = `<input class="profile-input" id="first_name_input" value="${firstName.innerText}">`;
+                lastName.innerHTML = `<input class="profile-input" id="last_name_input" value="${lastName.innerText}">`;
+                address.innerHTML = `<input class="profile-input" id="address_input" value="${address.innerText}">`;
+                contact.innerHTML = `<input class="profile-input" id="contact_input" value="${contact.innerText}">`;
+                document.getElementById("editBtn").innerText = "Save";
+            } else {
+                // Save changes to Supabase
+                saveProfile();
+            }
+            editing = !editing;
+        }
+
+        async function saveProfile() {
+            const user = await getCurrentUser();
+            const firstName = document.getElementById("first_name_input").value;
+            const lastName = document.getElementById("last_name_input").value;
+            const address = document.getElementById("address_input").value;
+            const contact = document.getElementById("contact_input").value;
+
+            const full_name = `${firstName} ${lastName}`;
+
+            const { error } = await supabaseClient.auth.updateUser({
+                data: {
+                    full_name,
+                    address,
+                    contact
+                }
+            });
+
+            if (error) {
+                alert("Failed to update profile: " + error.message);
+            } else {
+                alert("Profile updated successfully!");
+                document.getElementById("editBtn").innerText = "Edit";
+                loadProfile(); // Reload profile
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const session = await checkAuth();
+            if (!session) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            await loadProfile();
+
+            document.getElementById("logoutBtn").addEventListener("click", async () => {
+                await signOut();
+                window.location.href = "login.html";
+            });
+
+            document.getElementById("editBtn").addEventListener("click", toggleEdit);
+        });
+    </script>
 </body>
 </html>

@@ -1,7 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css">
+	<title>Electric Bill Calculator</title>
+	<style>
+		@media (max-width: 576px) {
+
+	    .container-c {
+	        flex-direction: column;
+	        padding: 10px;
+	        height: auto;
+	    }
+
+	    .sidebar {
+	        width: 100%;
+	        height: auto;
+	        padding: 15px;
+	    }
+
+	    .side-logo img {
+	        width: 100px;
+	        height: auto;
+	        margin-bottom: 10px;
+	    }
+
+	    .side-nav a {
+	        font-size: 24px;
+	        padding: 10px 0;
+	        display: block;
+	        text-align: center;
+	        width: 100%;
+	    }
+
+	    .calculator {
+	        width: 100%;
+	        padding: 10px;
+	        text-align: center;
+	    }
+
+	    .title h1 {
+	        font-size: 26px;
+	        line-height: 32px;
+	    }
+
+	    .title h2 {
+	        font-size: 20px;
+	    }
+
+	    .input input {
+	        width: 90%;
+	        max-width: 300px;
+	        height: 35px;
+	        border-radius: 50px;
+	    }
+
+	    .button button {
+	        width: 90%;
+	        max-width: 250px;
+	        height: 35px;
+	        font-size: 16px;
+	        border-radius: 50px;
+	    }
+	}
+	</style>
 </head>
 <body style="background-color: #C8EDE6;">
 	<div class="container-c">
@@ -12,36 +74,81 @@
 			<div class="side-nav">
 				<a href="dashboard.html">DASHBOARD</a>
 				<a href="profile.html">PROFILE</a>
-				<a style="background-color: #C8EDE6;" href="">CALCULATOR</a>
+				<a style="background-color: #C8EDE6;" href="calculator.html">CALCULATOR</a>
 				<a href="history.html">HISTORY</a>
 			</div>
 		</div>
+
 		<div class="calculator">
 			<div class="title">
 				<h1>ELECTRIC BILL <br>CALCULATOR</h1>
-				<br>
 				<h2>CALCULATOR</h2>
 			</div>
-			<br>
-			<br>
-			<br>
-			<br>
+
 			<div class="input">
-				<label>Power Consumption</label>
-				<br>
-				<input type="number">
-				<br>
-				<label>Cost per kWh</label>
-				<br>
-				<input type="number">
+				<label>Power Consumption (kWh)</label><br>
+				<input type="number" id="power_consumption"><br>
+                <br>
+				<label>Cost per kWh</label><br>
+				<input type="number" id="cost_per_kwh"><br>
 			</div>
-			<br>
-			<br>
+            <br>
+
 			<div class="button">
-				<button>CALCULATE</button>
-			</div>			
+				<button onclick="calculateBill()">CALCULATE</button>
+			</div>
+
+			<p id="result" style="margin-top: 15px; font-weight: bold;"></p>
 		</div>
 	</div>
 
+	<!-- Supabase -->
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	<script src="supabase-config.js"></script>
+	<script>
+		async function getCurrentUser() {
+			const { data: { session } } = await supabaseClient.auth.getSession();
+			return session?.user || null;
+		}
+
+		async function calculateBill() {
+			const consumption = parseFloat(document.getElementById("power_consumption").value);
+			const cost = parseFloat(document.getElementById("cost_per_kwh").value);
+
+			if (!consumption || !cost) {
+				alert("Please enter both fields!");
+				return;
+			}
+
+			const total = (consumption * cost).toFixed(2);
+			document.getElementById("result").textContent = `Your Bill: ₱${total}`;
+
+			// Save calculation to Supabase
+			const user = await getCurrentUser();
+			if (!user) {
+				alert("Please login first!");
+				return;
+			}
+
+			const { data, error } = await supabaseClient
+				.from("calculations")
+				.insert([
+					{
+						user_id: user.id,
+						date: new Date().toISOString().split("T")[0],
+						power_consumption: consumption,
+						cost_per_kwh: cost,
+						result: total
+					}
+				]);
+
+			if (error) {
+				console.error(error);
+				alert("Failed to save calculation!");
+			} else {
+				alert("Calculation saved! You can view it in History.");
+			}
+		}
+	</script>
 </body>
 </html>

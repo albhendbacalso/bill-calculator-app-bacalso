@@ -1,58 +1,171 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="styles.css">
-	<style>
-		a:hover{
-			color: #C8EDE6;
-		}
-	</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Sign Up</title>
+    <style>
+        a:hover {
+            color: #C8EDE6;
+        }
+
+        @media (max-width: 576px) {
+            .container-c {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                gap: 20px;
+                height: auto;
+            }
+
+            .container-c img {
+                margin: 0 !important;
+                padding: 10px;
+                width: 120px;
+            }
+
+            .calculator {
+                width: 100%;
+                padding: 10px;
+                text-align: center;
+            }
+
+            .title h1 {
+                font-size: 26px;
+                line-height: 32px;
+            }
+
+            .title h2 {
+                font-size: 20px;
+            }
+
+            .input input {
+                width: 90%;
+                max-width: 300px;
+                height: 35px;
+                border-radius: 50px;
+            }
+
+            .button button {
+                width: 90%;
+                max-width: 250px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .calculator p {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-	<div class="container-c" style="background-color: white;">
-		<img style="padding: 20px; margin-bottom:400px ;" src="images/logo.png">
-		<div class="calculator">
-			<div class="title">
-				<h1>ELECTRIC BILL <br>CALCULATOR</h1>
-				<br>
-				<h2>SIGN UP</h2>
-			</div>
-			<br>
-			<br>
-			<br>
-			<br>
-			<div class="input">
-				<label >First Name</label>
-				<br>
-				<input style="background-color: white;" type="text">
-				<br>
-				<label>Last Name</label>
-				<br>
-				<input style="background-color: white;" type="text">
-				<br>
-				<label>Email</label>
-				<br>
-				<input style="background-color: white;" type="text">
-				<br>
-				<label>Password</label>
-				<br>
-				<input style="background-color: white;" type="text">
-				<br>								
-			</div>
-			<br>
-			<br>
-			<div class="button">
-				<a href="dashboard.html">
-				<button>Sign Up</button>
-				</a>
-			</div>
-			<div style="margin-top: 100px;">
-				<p>Already have account? <a href="login.html"> Login</a><p>
-			</div>			
-		</div>
-		<img style="padding: 20px; margin-top:400px ;" src="images/logo.png">
-	</div>
+    <div class="container-c" style="background-color: white;">
+        <img style="padding: 20px; margin-bottom:400px;" src="images/logo.png">
 
+        <div class="calculator">
+            <div class="title">
+                <h1>ELECTRIC BILL <br>CALCULATOR</h1>
+                <br>
+                <h2>SIGN UP</h2>
+            </div>
+            <br><br><br><br>
+
+            <div class="input">
+                <label>Full Name</label><br>
+                <input type="text" id="full_name" placeholder="Your full name" required><br>
+
+                <label>Email</label><br>
+                <input type="email" id="email" placeholder="Your email" required><br>
+
+                <label>Password</label><br>
+                <input type="password" id="password" placeholder="Enter password" required><br>
+
+                <label>Confirm Password</label><br>
+                <input type="password" id="confirm_password" placeholder="Confirm password" required><br>
+            </div>
+            <br><br>
+
+            <div class="button">
+                <button id="signupBtn">Sign Up</button>
+            </div>
+
+            <div style="margin-top: 200px;">
+                <p>Already have an account? <a href="login.html">Login</a></p>
+            </div>
+        </div>
+
+        <img style="padding: 20px; margin-top:400px;" src="images/logo.png">
+    </div>
+
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            await redirectIfAuthenticated();
+        });
+
+        document.getElementById("signupBtn").addEventListener("click", handleSignUp);
+
+        async function handleSignUp() {
+            const name = document.getElementById("full_name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm_password").value;
+
+            if (!name || !email || !password || !confirmPassword) {
+                alert("Please fill in all fields!");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters long!");
+                return;
+            }
+
+            const signupBtn = document.getElementById("signupBtn");
+            const originalValue = signupBtn.innerText;
+            signupBtn.innerText = "Registering...";
+            signupBtn.disabled = true;
+
+            try {
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: { full_name: name }
+                    }
+                });
+
+                if (error) {
+                    alert("Registration failed: " + error.message);
+                    return;
+                }
+
+                alert("Registration successful! Please verify your email before logging in.");
+                window.location.href = "login.html";
+
+            } catch (err) {
+                alert("An error occurred: " + err.message);
+            } finally {
+                signupBtn.innerText = originalValue;
+                signupBtn.disabled = false;
+            }
+        }
+
+        async function redirectIfAuthenticated() {
+            const session = await checkAuth();
+            if (session) {
+                window.location.href = "dashboard.html";
+            }
+        }
+    </script>
 </body>
 </html>

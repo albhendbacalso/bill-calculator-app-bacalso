@@ -1,7 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css">
+	<title>Dashboard</title>
+	<style>
+		@media (max-width: 576px) {
+	    .container-c {
+	        flex-direction: column;
+	        padding: 10px;
+	        height: auto;
+	    }
+	    .sidebar {
+	        width: 100%;
+	        height: auto;
+	        padding: 15px;
+	        text-align: center;
+	    }
+	    .side-logo img {
+	        width: 100px;
+	        height: auto;
+	        margin-bottom: 10px;
+	    }
+	    .side-nav a {
+	        font-size: 20px;
+	        padding: 10px 0;
+	        display: block;
+	        width: 100%;
+	    }
+	    .calculator {
+	        width: 100%;
+	        padding: 10px;
+	        text-align: center;
+	    }
+	    .title h1 {
+	        font-size: 26px;
+	        line-height: 32px;
+	    }
+	    .title h2 {
+	        font-size: 18px;
+	    }
+	    .table {
+	        width: 100%;
+	        overflow-x: auto;
+	        padding: 10px 0;
+	    }
+	    table {
+	        width: 100% !important;
+	        font-size: 14px;
+	        border-collapse: collapse;
+	    }
+	    table th,
+	    table td {
+	        padding: 8px;
+	        text-align: center;
+	        font-size: 14px;
+	    }
+	    .description {
+	        flex-direction: column;
+	        align-items: center;
+	        gap: 15px;
+	    }
+	    .text {
+	        width: 90% !important;
+	        max-width: 250px;
+	        padding: 15px;
+	    }
+	    .text h1 {
+	        font-size: 18px;
+	    }
+	    .text p {
+	        font-size: 14px;
+	    }
+	    .text button {
+	        width: 50px;
+	        height: 30px;
+	        font-size: 16px;
+	    }
+	}
+	</style>
 </head>
 <body style="background-color: #C8EDE6;">
 	<div class="container-c">
@@ -16,37 +93,36 @@
 				<a href="history.html">HISTORY</a>
 			</div>
 		</div>
+
 		<div class="calculator">
 			<div class="title">
 				<h1>ELECTRIC BILL <br>CALCULATOR</h1>
 				<br>
-				<h2>WELCOME,USER</h2>
+				<h2>WELCOME, USER</h2>
 				<br>
-				<h2>RECENT RESULT</h2>
+				<h2>RECENT RESULTS</h2>
 			</div>
+
 			<div class="table">
-				<table>
+				<table id="recentTable">
 					<tr>
 						<th>DATE</th>
 						<th>POWER CONSUMPTION</th>
 						<th>COST PER KWH</th>
 						<th>BILL</th>
 					</tr>
-					<tr>
-						<td>Sample</td>
-						<td>Sample</td>
-						<td>Sample</td>
-						<td>Sample</td>
-					</tr>
 				</table>
 			</div>
 		</div>
+
 		<section class="description" style="flex-direction: column;">
 			<div class="text" style="background-color: white; width: 250px;">
 				<h1>Profile</h1>
 				<p>View Your Account</p>
 				<br>
-				<button>→</button>	
+				<a href="profile.html">
+					<button>→</button>	
+				</a>
 			</div>
 			<div class="text" style="background-color: white; width: 250px;">
 				<h1>Calculator</h1>
@@ -60,10 +136,55 @@
 				<h1>HISTORY</h1>
 				<p>View past calculations</p>
 				<br>
-				<button>→</button>	
+				<a href="history.html">
+					<button>→</button>	
+				</a>
 			</div>						
 		</section>
 	</div>
 
+	<!-- Supabase -->
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	<script src="supabase-config.js"></script>
+	<script>
+		async function loadRecent() {
+			const { data: { session } } = await supabaseClient.auth.getSession();
+			const user = session?.user;
+
+			if (!user) {
+				alert("Please login first!");
+				window.location.href = "login.html";
+				return;
+			}
+
+			// Fetch latest 5 calculations for dashboard
+			const { data, error } = await supabaseClient
+				.from("calculations")
+				.select("*")
+				.eq("user_id", user.id)
+				.order("created_at", { ascending: false })
+				.limit(5);
+
+			if (error) {
+				console.error(error);
+				alert("Failed to load recent results!");
+				return;
+			}
+
+			const table = document.getElementById("recentTable");
+			// Clear previous rows except header
+			table.querySelectorAll("tr:not(:first-child)").forEach(row => row.remove());
+
+			data.forEach(calc => {
+				const row = table.insertRow();
+				row.insertCell(0).textContent = new Date(calc.date).toLocaleDateString();
+				row.insertCell(1).textContent = calc.power_consumption;
+				row.insertCell(2).textContent = calc.cost_per_kwh;
+				row.insertCell(3).textContent = calc.result;
+			});
+		}
+
+		document.addEventListener("DOMContentLoaded", loadRecent);
+	</script>
 </body>
 </html>
